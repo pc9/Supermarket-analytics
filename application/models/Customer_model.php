@@ -44,6 +44,22 @@ class Customer_model extends CI_Model {
 				SUM(CASE WHEN age >80 THEN 1 ELSE 0 END) AS \'80+\' 
 				FROM(SELECT TIMESTAMPDIFF(YEAR,birthdate,CURDATE()) AS age FROM customer) age_table');
 		}
+		if ($based_on == 'marital_status')
+		{
+			$result = $this->db->query('SELECT COUNT(customer_id) AS count,marital_status FROM customer GROUP BY marital_status');
+		}	
+		if ($based_on == 'occupation')
+		{
+			$result = $this->db->query('SELECT COUNT(customer_id) AS count,occupation FROM customer GROUP BY occupation');
+		}
+		if ($based_on == 'member_card')
+		{
+			$result = $this->db->query('SELECT COUNT(customer_id) AS count,member_card FROM customer GROUP BY member_card');
+		}
+		if ($based_on == 'education')
+		{
+			$result = $this->db->query('SELECT COUNT(customer_id) AS count,education FROM customer GROUP BY education');
+		}										
 		return $result->result_array();		
 	}
 }

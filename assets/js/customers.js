@@ -115,6 +115,22 @@ $(document).on('change','select[name="customer_count_group"]',function(){
   {
     data = JSON.parse($('input[name="customers_count_by_age"]').val());
   }
+  if (group == 'marital_status')
+  {
+    data = JSON.parse($('input[name="customers_count_by_marital_status"]').val());
+  }
+  if (group == 'occupation')
+  {
+    data = JSON.parse($('input[name="customers_count_by_occupation"]').val());
+  }  
+  if (group == 'member_card')
+  {
+    data = JSON.parse($('input[name="customers_count_by_member_card"]').val());
+  }
+  if (group == 'education')
+  {
+    data = JSON.parse($('input[name="customers_count_by_education"]').val());
+  }  
   bar_chart(data);
 });
 

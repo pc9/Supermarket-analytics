@@ -26,10 +26,14 @@
               <h3 class="box-title">Show Customers distribution</h3>
               <form class="form-inline" style="display: inline-block;">
                 <div class="form-group">
-                  <label>grouped by</label>
+                  <label>based on</label>
                   <select class="form-control" style="height:auto;padding:0" name="customer_count_group">
                     <option value="salary">Salary</option>
+                    <option value="member_card">Member Card</option>
+                    <option value="education">Education</option>
+                    <option value="occupation">Occupation</option>
                     <option value="age">Age</option>
+                    <option value="marital_status">Marital Status</option>
                   </select>
                 </div>
               </form>              
@@ -108,6 +112,10 @@
 <input type="hidden" name="customers_count_by_gender" value='<?=$customers_count_by_gender?>'>
 <input type="hidden" name="customers_count_by_income" value='<?=$customers_count_by_income?>'>
 <input type="hidden" name="customers_count_by_age" value='<?=$customers_count_by_age?>'>
+<input type="hidden" name="customers_count_by_marital_status" value='<?=$customers_count_by_marital_status?>'>
+<input type="hidden" name="customers_count_by_occupation" value='<?=$customers_count_by_occupation?>'>
+<input type="hidden" name="customers_count_by_member_card" value='<?=$customers_count_by_member_card?>'>
+<input type="hidden" name="customers_count_by_education" value='<?=$customers_count_by_education?>'>
 <?=$footer?>
 <style type="text/css">
   .box{
