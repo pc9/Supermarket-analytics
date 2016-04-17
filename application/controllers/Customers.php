@@ -17,6 +17,7 @@ class Customers extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('customer_model','customer');
+		$data['total_count'] = $this->customer->getCount()[0]; 
 		$based_on = 'gender';
 		$data['customers_count_by_gender'] = json_encode($this->customer->getCount($based_on)[0]);
 		$based_on = 'income';
@@ -46,7 +47,25 @@ class Customers extends CI_Controller {
 		foreach ($temp as $key => $value) {
 			$data['customers_count_by_education'][$value['education']] = $value['count'];			
 		}
-		$data['customers_count_by_education'] = json_encode($data['customers_count_by_education']);				
+		$data['customers_count_by_education'] = json_encode($data['customers_count_by_education']);	
+		$based_on = 'country';
+		$temp = $this->customer->getCount($based_on);
+		foreach ($temp as $key => $value) {
+			$data['customers_count_by_country'][$value['country']] = $value['count'];						
+		}
+		$data['customers_count_by_country'] = json_encode($data['customers_count_by_country']);
+		$based_on = 'state';
+		$temp = $this->customer->getCount($based_on);
+		foreach ($temp as $key => $value) {
+			$data['customers_count_by_state'][$value['state_province']] = $value['count'];						
+		}
+		$data['customers_count_by_state'] = json_encode($data['customers_count_by_state']);
+		$based_on = 'city';
+		$temp = $this->customer->getCount($based_on);
+		foreach ($temp as $key => $value) {
+			$data['customers_count_by_city'][$value['city']] = $value['count'];						
+		}
+		$data['customers_count_by_city'] = json_encode($data['customers_count_by_city']);		
 		$data['header'] = $this->load->view('common/header',['title'=>'Customers'],true);
 		$data['footer'] = $this->load->view('common/footer',[],true);
 		$data['top_navbar'] = $this->load->view('common/top_navbar',[],true);

@@ -130,8 +130,100 @@ $(document).on('change','select[name="customer_count_group"]',function(){
   if (group == 'education')
   {
     data = JSON.parse($('input[name="customers_count_by_education"]').val());
-  }  
+  } 
+  if (group == 'state')
+  {
+    data = JSON.parse($('input[name="customers_count_by_state"]').val());
+  }      
   bar_chart(data);
 });
 
 bar_chart(JSON.parse($('input[name="customers_count_by_income"]').val()));
+
+var map_data = JSON.parse($('input[name="customers_count_by_country"]').val());
+var customersData = {
+  "US": map_data['USA'], //USA
+  "CA": map_data['Canada'], //Canada
+  "MX": map_data['Mexico'] //Mexico
+};
+//World map by jvectormap
+$('#world-map').vectorMap({
+  map: 'north_america_mill',
+  backgroundColor: "transparent",
+  regionStyle: {
+    initial: {
+      fill: '#fff',
+      "fill-opacity": 1,
+      stroke: 'none',
+      "stroke-width": 1,
+      "stroke-opacity": 1
+    }
+  },
+  series: {
+    regions: [{
+        values: customersData,
+        scale: ["#FD9479", "#e74c3c"],
+        normalizeFunction: 'polynomial'
+      }]
+  },
+  onRegionLabelShow: function (e, el, code) {
+    if (typeof customersData[code] != "undefined")
+      el.html(el.html() + ': ' + customersData[code] + ' customers');
+  }
+});
+
+var diameter = 960,
+    format = d3.format(",d"),
+    color = d3.scale.category20c();
+
+var bubble = d3.layout.pack()
+    .sort(null)
+    .size([diameter, diameter])
+    .padding(2);
+
+var svg = d3.select("body .city_wise_distribution").append("svg")
+    .attr("width", '100%')
+    .attr("height", diameter)
+    .attr("class", "bubble");
+
+var cityData = [];
+$.each(JSON.parse($('input[name="customers_count_by_city"]').val()),function(key,value){
+  cityData.push({'name':key,'size':value});
+});
+var root = {"name": "city", 
+            "children": cityData
+            };
+var node = svg.selectAll(".node")
+    .data(bubble.nodes(classes(root))
+    .filter(function(d) { return !d.children; }))
+  .enter().append("g")
+    .attr("class", "node")
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+node.append("title")
+    .text(function(d) { return d.className + ": " + format(d.value); });
+
+node.append("circle")
+    .attr("r", function(d) { return d.r; })
+    .style("fill", function(d) { return color(d.packageName); });
+
+node.append("text")
+    .attr("dy", ".3em")
+    .attr("fill","#fff")
+    .style("text-anchor", "middle")
+    .text(function(d) { return d.className.substring(0, d.r / 3); });
+
+// Returns a flattened hierarchy containing all leaf nodes under the root.
+function classes(root) {
+  var classes = [];
+
+  function recurse(name, node) {
+    if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
+    else classes.push({packageName: name, className: node.name, value: node.size});
+  }
+
+  recurse(null, root);
+  return {children: classes};
+}
+$('.city_count').text(cityData.length);
+d3.select(self.frameElement).style("height", diameter + "px");

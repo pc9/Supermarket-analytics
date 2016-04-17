@@ -1,3 +1,4 @@
+<script src="/assets/js/d3.v3.min.js"></script>
 <script src="/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <script src="/assets/js/jquery-ui.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>

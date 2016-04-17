@@ -6,20 +6,16 @@
   <?=$top_navbar?>
   <?=$sidebar_menu?>
   <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Customers ( <?=$total_count['total']?> ) <small><a href="javascript:"><small class="label bg-green">View</small></a></small></h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Customers</li>
+      </ol>
+    </section>  
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-4">
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <i class="fa fa-user"></i>
-              <h3 class="box-title">Customers ( Male and Female )</h3>
-            </div>
-            <div class="box-body">
-              <div id="donut-chart" style="height: 250px;"></div>
-            </div>
-          </div> 
-        </div>
-        <div class="col-sm-8">
+        <div class="col-sm-12">
           <div class="box box-primary">
             <div class="box-header with-border">
               <i class="fa fa-usd"></i>
@@ -29,6 +25,7 @@
                   <label>based on</label>
                   <select class="form-control" style="height:auto;padding:0" name="customer_count_group">
                     <option value="salary">Salary</option>
+                    <option value="state">State Province</option>
                     <option value="member_card">Member Card</option>
                     <option value="education">Education</option>
                     <option value="occupation">Occupation</option>
@@ -40,11 +37,50 @@
               
             </div>
             <div class="box-body">
-              <div id="bar-chart" style="height: 250px;"></div>
+              <div id="bar-chart" style="height: 450px;"></div>
             </div>
           </div>          
         </div>
-      </div>    
+      </div>  
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <i class="fa fa-user"></i>
+              <h3 class="box-title">Customers ( Male and Female )</h3>
+            </div>
+            <div class="box-body">
+              <div id="donut-chart" style="height: 450px;"></div>
+            </div>
+          </div> 
+        </div>      
+        <div class="col-sm-8">        
+          <div class="box box-solid bg-light-blue-gradient">
+            <div class="box-header">
+              <i class="fa fa-map-marker"></i>
+              <h3 class="box-title">
+                Customers
+              </h3>
+            </div>
+            <div class="box-body">
+              <div id="world-map" style="height: 450px; width: 100%;"></div>
+            </div>
+          </div>        
+        </div>
+        <div class="col-sm-12">
+          <div class="box box-primary">
+            <div class="box-header">
+              <i class="fa fa-map-marker"></i>
+              <h3 class="box-title">
+                Customers city (<span class="city_count"></span>) wise distribution
+              </h3>
+            </div>
+            <div class="box-body city_wise_distribution">
+              
+            </div>
+          </div>           
+        </div>
+      </div>  
     </div>
 </div>
 
@@ -116,12 +152,16 @@
 <input type="hidden" name="customers_count_by_occupation" value='<?=$customers_count_by_occupation?>'>
 <input type="hidden" name="customers_count_by_member_card" value='<?=$customers_count_by_member_card?>'>
 <input type="hidden" name="customers_count_by_education" value='<?=$customers_count_by_education?>'>
+<input type="hidden" name="customers_count_by_country" value='<?=$customers_count_by_country?>'>
+<input type="hidden" name="customers_count_by_state" value='<?=$customers_count_by_state?>'>
+<input type="hidden" name="customers_count_by_city" value='<?=$customers_count_by_city?>'>
 <?=$footer?>
 <style type="text/css">
   .box{
     margin:10px 0;
   }
 </style>
+<script src="/assets/js/jquery-jvectormap-north_america-mill.js"></script>
 <script src="/assets/js/customers.js"></script>
 <script>
  $.widget.bridge('uibutton', $.ui.button);

@@ -19,6 +19,7 @@ class Customer_model extends CI_Model {
 
 	public function getCount($based_on = '')
 	{
+		$result = $this->db->query('SELECT COUNT(customer_id) AS total FROM customer');
 		if ($based_on == 'gender') 
 		{
 			$result = $this->db->query('SELECT COUNT(customer_id) Total,SUM(CASE WHEN `gender` = \'M\' THEN 1 ELSE 0 END) Male,SUM(CASE WHEN `gender`=\'F\' THEN 1 ELSE 0 END) Female FROM customer');
@@ -60,6 +61,18 @@ class Customer_model extends CI_Model {
 		{
 			$result = $this->db->query('SELECT COUNT(customer_id) AS count,education FROM customer GROUP BY education');
 		}										
+		if ($based_on == 'country') 
+		{
+			$result = $this->db->query('SELECT DISTINCT(country),COUNT(customer_id) AS count FROM customer GROUP BY country ORDER BY country');
+		}
+		if ($based_on == 'state')
+		{
+			$result = $this->db->query('SELECT DISTINCT(state_province),COUNT(customer_id) AS count FROM customer GROUP BY state_province');
+		}
+		if ($based_on == 'city')
+		{
+			$result = $this->db->query('SELECT DISTINCT(city),COUNT(customer_id) AS count FROM customer GROUP BY city');
+		}		
 		return $result->result_array();		
 	}
 }
