@@ -14,6 +14,8 @@
 <script src="/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script src="/assets/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="/assets/plugins/fastclick/fastclick.min.js"></script>
+<script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="/assets/js/app.min.js"></script>
 <!-- FLOT CHARTS -->
 <script src="/assets/plugins/flot/jquery.flot.min.js"></script>
@@ -23,3 +25,4 @@
 <script src="/assets/plugins/flot/jquery.flot.pie.min.js"></script>
 <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
 <script src="/assets/plugins/flot/jquery.flot.categories.min.js"></script>
+<script src="/assets/plugins/chartjs/Chart.js"></script>

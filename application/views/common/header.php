@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/assets/css/ionicons.min.css">
 	<link rel="stylesheet" href="/assets/css/AdminLTE.min.css">
 	<link rel="stylesheet" href="/assets/css/skin-green.min.css">
+	<link rel="stylesheet" href="/assets/plugins/datatables/dataTables.bootstrap.css">
 	<link rel="stylesheet" href="/assets/plugins/iCheck/flat/blue.css">
 	<link rel="stylesheet" href="/assets/plugins/morris/morris.css">
 	<link rel="stylesheet" href="/assets/plugins/jvectormap/jquery-jvectormap-1.2.2.css">

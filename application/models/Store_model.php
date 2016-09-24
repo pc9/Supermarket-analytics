@@ -47,4 +47,9 @@ class Store_model extends CI_Model {
 		return $result->result_array();
 	}	
 
+	public function get_inventory_data($id)
+	{
+		$result = $this->db->query("SELECT SUM(A.units_ordered) as ordered,SUM(A.units_shipped) AS shipped,SUM(A.units_ordered)-SUM(A.units_shipped) diff,B.product_name FROM inventory_fact_1998 as A join product AS B ON A.product_id=B.product_id WHERE A.store_id=$id GROUP BY A.product_id ORDER BY diff DESC");
+		return $result->result_array();
+	}
 }

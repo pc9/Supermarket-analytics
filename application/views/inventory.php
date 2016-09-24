@@ -17,67 +17,29 @@
   <?=$sidebar_menu?>
   <div class="content-wrapper">
     <section class="content-header">
-      <h1>Valuable Customers</h1>
+      <h1>Inventory</h1>
       <ol class="breadcrumb">
         <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Customers</li>
+        <li class="active">Inventory</li>
       </ol>
     </section>  
     <div class="container-fluid">
       <div class="content-body">
-        <p>Valuable customers are judged based on the following : </p>
+        <p>Products judgement for its inventory is done on the basis of Number of units ordered and Number of units shipped from warehouse.</p>
+        <p>If Units orderded greater than Units shipped then its stock in warehouse is to be increased else reduce that stock in warehouse</p>
         <form method="POST" onsubmit="getData();return false;">
           <div class="row">
             <div class="col-sm-2">
               <div class="form-group">
-                <label>Deciding Parameter</label>
-                <select class="form-control" name="deciding_param">
-                  <option value="frequency_of_visit">Frequency of visit</option>
-                  <option value="profit">Profit to store</option>
-                  <option value="both">Both</option>
+                <label>Store</label>
+                <select class="form-control" name="store">
+                  <?php 
+                    foreach ($store as $key => $value) {?>
+                      <option value="<?=$value['store_id']?>"><?=$value['store_name']?></option>  
+                  <?php }?>
                 </select>
               </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label>Frequency of visit</label>
-                <input name="frequency_of_visit_value" class="form-control" type="number" step="1" min="0" placeholder="visit count" disabled>
-              </div>
-            </div> 
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label>Profit to store</label>
-                <input name="profit_value" class="form-control" type="number" step="1" min="0" placeholder="profit value" disabled>
-              </div>
-            </div> 
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label>Year</label>
-                <select class="form-control" name="year">
-                  <option>1997</option>
-                  <option>1998</option>
-                </select>
-              </div>
-            </div> 
-            <div class="col-sm-2">
-              <div class="form-group">
-                <label>Month</label>
-                <select class="form-control" name="month">
-                  <option>January</option>
-                  <option>February</option>
-                  <option>March</option>
-                  <option>April</option>
-                  <option>May</option>
-                  <option>June</option>
-                  <option>July</option>
-                  <option>August</option>
-                  <option>September</option>
-                  <option>October</option>
-                  <option>November</option>
-                  <option>December</option>
-                </select>
-              </div>
-            </div>
+            </div>            
             <div class="col-sm-2">
               <div class="form-group">
                 <button class="btn btn-primary" style="margin-top:25px" type="submit">Get Data</button>
@@ -86,19 +48,21 @@
           </div>
         </form>
         <div class="box">
-          <table id="customers_data" class="table table-bordered table-striped">
+          <table id="products_data" class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Frequency</th>
-                <th>Profit</th>
+                <th>Product Name</th>
+                <th>Units Ordered</th>
+                <th>Units Sold</th>
+                <th>Evaluation</th>
               </tr>
             </thead>
             <tbody></tbody>
             <tfoot>
-              <th>Name</th>
-              <th>Frequency</th>
-              <th>Profit</th>            
+                <th>Product Name</th>
+                <th>Units Ordered</th>
+                <th>Units Sold</th>
+                <th>Evaluation</th>          
             </tfoot>
           </table>        
           <div class="overlay hidden">
@@ -174,51 +138,25 @@
 <script src="/assets/js/jquery-jvectormap-north_america-mill.js"></script>
 <script>
   $.widget.bridge('uibutton', $.ui.button);
-  function setParams()
-  {
-    var val = $('select[name="deciding_param').val();
-    if(val == 'frequency_of_visit')
-    {
-      $('input[name="frequency_of_visit_value"]').attr('disabled',false);
-      $('input[name="profit_value"]').attr('disabled',true);
-    }
-    if(val == 'profit')
-    {
-      $('input[name="frequency_of_visit_value"]').attr('disabled',true);
-      $('input[name="profit_value"]').attr('disabled',false);
-    }  
-    if(val == 'both')
-    {
-      $('input[name="frequency_of_visit_value"]').attr('disabled',false);
-      $('input[name="profit_value"]').attr('disabled',false);
-    }    
-  }
-  // $('#customers_data').DataTable({"bDestroy": true});
-  $(document).on('change','select[name="deciding_param"]',setParams);
-  setParams();
   function getData()
   {
     var obj = {
-      'deciding_param' : $('select[name="deciding_param').val(),
-      'frequency_of_visit_value' : $('input[name="frequency_of_visit_value"]').val(),
-      'profit_value' : $('input[name="profit_value"]').val(),
-      'year' : $('select[name="year').val(),
-      'month' : $('select[name="month').val()
+      'store_id' : $('select[name="store').val()
     }
     $('.content-body .overlay').removeClass('hidden');
-    $.get('/customers/valuable_customers?'+$.param(obj),function(data){
-      var heading='<tr><th>Name</th>';
+    $.get('/inventory/get_inventory_data?'+$.param(obj),function(data){
       var tbody='';
       if(data !='[]'){
         data = JSON.parse(data);
-        heading+=(data[0].count != undefined)?'<th>Frequency</th>':'';
-        heading+=(data[0].profit != undefined)?'<th>Profit</th>':'';
-        heading+='</tr>';
         $.each(data,function(index,value){
+            var action = 'Increase';
+          if(value.diff>0)
+            action = 'Decrease';
           tbody+='<tr>';
-          tbody+='<td><a href="/customers/view/'+value.customer_id+'">'+value.fullname+'</a></td>';
-          tbody+=(value.count != undefined)?'<td>'+value.count+'</td>':'';
-          tbody+=(value.profit != undefined)?'<td>'+value.profit+'</td>':'';
+          tbody+='<td>'+value.product_name+'</td>';
+          tbody+='<td>'+value.ordered+'</td>';
+          tbody+='<td>'+value.shipped+'</td>';
+          tbody+='<td>'+action+'</td>';
           tbody+='</tr>';
         });
       }
@@ -227,10 +165,8 @@
         $(this).dataTable().fnClearTable();
         $(this).dataTable().fnDestroy();
       });
-      $('#customers_data thead').html(heading);
-      $('#customers_data tfoot').html(heading);
-      $('#customers_data tbody').html(tbody);
-      $('#customers_data').DataTable();
+      $('#products_data tbody').html(tbody);
+      $('#products_data').DataTable();
       $('.content-body .overlay').addClass('hidden');
     });
   }

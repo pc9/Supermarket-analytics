@@ -171,59 +171,34 @@ $('#world-map').vectorMap({
       el.html(el.html() + ': ' + customersData[code] + ' customers');
   }
 });
-
+var root = JSON.parse($('input[name="customers_count_by_city"]').val());
 var diameter = 960,
-    format = d3.format(",d"),
-    color = d3.scale.category20c();
+    format = d3.format(",d");
 
-var bubble = d3.layout.pack()
-    .sort(null)
-    .size([diameter, diameter])
-    .padding(2);
+var pack = d3.layout.pack()
+    .size([diameter - 4, diameter - 4])
+    .value(function(d) { return d.size; });
 
 var svg = d3.select("body .city_wise_distribution").append("svg")
     .attr("width", '100%')
     .attr("height", diameter)
-    .attr("class", "bubble");
+  .append("g")
+    .attr("transform", "translate(2,2)");
+  var node = svg.datum(root).selectAll(".node")
+      .data(pack.nodes)
+    .enter().append("g")
+      .attr("class", function(d) { return d.children ? "node" : "leaf node"; })
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-var cityData = [];
-$.each(JSON.parse($('input[name="customers_count_by_city"]').val()),function(key,value){
-  cityData.push({'name':key,'size':value});
-});
-var root = {"name": "city", 
-            "children": cityData
-            };
-var node = svg.selectAll(".node")
-    .data(bubble.nodes(classes(root))
-    .filter(function(d) { return !d.children; }))
-  .enter().append("g")
-    .attr("class", "node")
-    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  node.append("title")
+      .text(function(d) { return d.name + (d.children ? "" : ": " + format(d.size)); });
 
-node.append("title")
-    .text(function(d) { return d.className + ": " + format(d.value); });
+  node.append("circle")
+      .attr("r", function(d) { return d.r; });
 
-node.append("circle")
-    .attr("r", function(d) { return d.r; })
-    .style("fill", function(d) { return color(d.packageName); });
-
-node.append("text")
-    .attr("dy", ".3em")
-    .attr("fill","#fff")
-    .style("text-anchor", "middle")
-    .text(function(d) { return d.className.substring(0, d.r / 3); });
-
-// Returns a flattened hierarchy containing all leaf nodes under the root.
-function classes(root) {
-  var classes = [];
-
-  function recurse(name, node) {
-    if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
-    else classes.push({packageName: name, className: node.name, value: node.size});
-  }
-
-  recurse(null, root);
-  return {children: classes};
-}
-$('.city_count').text(cityData.length);
+  node.filter(function(d) { return !d.children; }).append("text")
+      .attr("dy", ".3em")
+      .attr("fill","#fff")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.name.substring(0, d.r / 3); });
 d3.select(self.frameElement).style("height", diameter + "px");
